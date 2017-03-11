@@ -16,19 +16,6 @@ The goals / steps of this project are the following:
 * Output visual display of the lane boundaries and numerical estimation of lane curvature and vehicle position.
 
 
-[//]: # (Image References)
-
-[image1]: ./output_images/01_corner_detection.jpg = 20x20   "Corner detection"
-[image2]: ./output_images/02_distorted_image.jpg    "Distorted image"
-[image3]: ./output_images/02_undistorted_image.jpg  "Undistorted image"
-[image4]: ./output_images/03_original_img.jpg       "Original image"
-[image5]: ./output_images/04_color_binary.jpg       "Color binary image"
-[image6]: ./output_images/04_thresholded_img.jpg    "thresholded image"
-[image7]: ./output_images/03_transforme_img.jpg     "transformed image"
-[image8]: ./output_images/04_line_detection.jpg     "Line detection"
-[image9]: ./output_images/05_result.jpg             "Reesult"
-[video]: ./output_images/project_video_result.mp4   "Video"
-
 ## [Rubric](https://review.udacity.com/#!/rubrics/571/view) Points
 ###Here I will consider the rubric points individually and describe how I addressed each point in my implementation.  
 
@@ -43,7 +30,7 @@ You're reading it! :-)
 
 ####1. Briefly state how you computed the camera matrix and distortion coefficients. Provide an example of a distortion corrected calibration image.
 
-The code for this step is contained in the first code cell of the IPython notebook located in "./examples/example.ipynb" (or in lines # through # of the file called `some_file.py`).  
+The code for this step is contained in lines `20` through  `90`of the file called `main.py`).  
 
 I start by preparing "object points", which will be the (x, y, z) coordinates of the chessboard corners in the world. Here I am assuming the chessboard is fixed on the (x, y) plane at z=0, such that the object points are the same for each calibration image.  Thus, `objp` is just a replicated array of coordinates, and `objpoints` will be appended with a copy of it every time I successfully detect all chessboard corners in a test image.  `imgpoints` will be appended with the (x, y) pixel position of each of the corners in the image plane with each successful chessboard detection.  
 
@@ -67,7 +54,10 @@ Undistorted image:
 ###Pipeline (single images)
 
 ####1. Describe how (and identify where in your code) you used color transforms, gradients or other methods to create a thresholded binary image.  Provide an example of a binary image result.
-I used a combination of color and gradient thresholds to generate a binary image (thresholding steps at lines # through # in `another_file.py`).  Here's an example of my output for this step.  
+
+I used a combination of color and gradient thresholds to generate a binary image (thresholding steps at lines `36` through `63` in `myUtils.py`).  I used `s_thresh=(170, 255)` and `sx_thresh=(30, 255)` to set the minimum and maximum threshod for the color (`S` channel in `HLS`) and Sobel filters, respectively.
+
+Here's an example of my output for this step.  
 
 Original image after distortion correction:
 
@@ -85,39 +75,39 @@ Combined thresholded image:
 
 ####3. Describe how (and identify where in your code) you performed a perspective transform and provide an example of a transformed image.
 
-The code for my perspective transform includes a function called `warper()`, which appears in lines 1 through 8 in the file `example.py` (output_images/examples/example.py) (or, for example, in the 3rd code cell of the IPython notebook).  The `warper()` function takes as inputs an image (`img`), as well as source (`src`) and destination (`dst`) points.  I chose the hardcode the source and destination points in the following manner:
+The code for my perspective transform includes a function called `warper()`, which appears in lines `94` through `163` in the file `main.py`.  The `warper()` function takes as inputs an image (`img`), as well as source (`src`) and destination (`dst`) points.  I use a mouse callback funtion to be able to click on the source image and choose four points. After getting points, I hardcoded the source and destination points in the following manner:
 
 ```
-src = np.float32(
-    [[(img_size[0] / 2) - 55, img_size[1] / 2 + 100],
-    [((img_size[0] / 6) - 10), img_size[1]],
-    [(img_size[0] * 5 / 6) + 60, img_size[1]],
-    [(img_size[0] / 2 + 55), img_size[1] / 2 + 100]])
-dst = np.float32(
-    [[(img_size[0] / 4), 0],
-    [(img_size[0] / 4), img_size[1]],
-    [(img_size[0] * 3 / 4), img_size[1]],
-    [(img_size[0] * 3 / 4), 0]])
-
+offset = 300
+src_points = np.float32([[212, 720], [1100, 720], [722, 477], [558, 477]])
+dst_points = np.float32([[offset, 720], [1280 - offset, 720], [1280-offset, 400], [offset, 400]])
 ```
 This resulted in the following source and destination points:
 
 | Source        | Destination   | 
 |:-------------:|:-------------:| 
-| 585, 460      | 320, 0        | 
-| 203, 720      | 320, 720      |
-| 1127, 720     | 960, 720      |
-| 695, 460      | 960, 0        |
+| 212, 720      | 300, 720      | 
+| 1100, 720     | 980, 720      |
+| 722, 477      | 980, 400      |
+| 558, 477      | 300, 400      |
 
 I verified that my perspective transform was working as expected by drawing the `src` and `dst` points onto a test image and its warped counterpart to verify that the lines appear parallel in the warped image.
 
 
 Transformed image:
 
+<img src="./output_images/03_transforme_img.jpg" align="middle" width=40% height=40%> 
+
+
 
 ####4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
 
-Then I did some other stuff and fit my lane lines with a 2nd order polynomial kinda like this:
+After thresholding and applying the persective transformation, I calculated the histogram of `1` pixels for each column of the image and localized left and right lines by finding the the top two peaks in the histogram:
+
+<img src="./output_images/histogram.jpg" align="middle" width=40% height=40%> 
+
+
+Then I applied the sliding window technique to find the lines and and fit my lane lines with a 2nd order polynomial kinda like this:
 
 <img src="./output_images/04_line_detection.jpg" align="middle" width=40% height=40%> 
 
