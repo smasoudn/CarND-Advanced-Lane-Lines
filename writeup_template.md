@@ -114,11 +114,11 @@ Then I applied the sliding window technique to find the lines and and fit my lan
 
 ####5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
 
-I did this in lines # through # in my code in `my_other_file.py`
+I did this in lines `164` through `173` in my code in `myUtils.py`
 
 ####6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
 
-I implemented this step in lines # through # in my code in `yet_another_file.py` in the function `map_lane()`.  Here is an example of my result on a test image:
+I implemented this step in lines `200` through `204` in my code in `main.py`.  Here is an example of my result on a test image:
 
 <img src="./output_images/05_result.jpg" align="middle" width=40% height=40%> 
 
@@ -136,5 +136,14 @@ Here's a [link to my video result](./output_images/project_video_result.mp4)
 
 ####1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
 
-Here I'll talk about the approach I took, what techniques I used, what worked and why, where the pipeline might fail and how I might improve it if I were going to pursue this project further.  
+
+Generally, any approach based on thresholding is sensitive to parameter tunning and it might not work for other environment/conditions (e.g. very sunny or dark environment).
+
+Also, fitting the poynomial with degree 2 might not be accurate enough as in some conditions (e.g. `harder_challenge_video.mp4`) the curve of the road is better represented by higher polynomial degrees (3 or 4).
+
+In addition, this approach might not work when lane lines are not clear or covered by snow. 
+
+
+
+Fitting 
 
