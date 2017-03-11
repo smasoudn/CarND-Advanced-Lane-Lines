@@ -1,9 +1,8 @@
-##Writeup Template
-###You can use this file as a template for your writeup if you want to submit it as a markdown file, but feel free to use some other method and submit a pdf if you prefer.
+##Project 4: Advanced Labe Line Detection
 
 ---
 
-**Advanced Lane Finding Project**
+Here I explain how I approach this problem using the tips mentioned in the course.
 
 The goals / steps of this project are the following:
 
@@ -16,15 +15,19 @@ The goals / steps of this project are the following:
 * Warp the detected lane boundaries back onto the original image.
 * Output visual display of the lane boundaries and numerical estimation of lane curvature and vehicle position.
 
+
 [//]: # (Image References)
 
-[image1]: ./examples/undistort_output.png "Undistorted"
-[image2]: ./test_images/test1.jpg "Road Transformed"
-[image3]: ./examples/binary_combo_example.jpg "Binary Example"
-[image4]: ./examples/warped_straight_lines.jpg "Warp Example"
-[image5]: ./examples/color_fit_lines.jpg "Fit Visual"
-[image6]: ./examples/example_output.jpg "Output"
-[video1]: ./project_video.mp4 "Video"
+[image1]: ./output_images/01_corner_detection.jpg = 20x20   "Corner detection"
+[image2]: ./output_images/02_distorted_image.jpg    "Distorted image"
+[image3]: ./output_images/02_undistorted_image.jpg  "Undistorted image"
+[image4]: ./output_images/03_original_img.jpg       "Original image"
+[image5]: ./output_images/04_color_binary.jpg       "Color binary image"
+[image6]: ./output_images/04_thresholded_img.jpg    "thresholded image"
+[image7]: ./output_images/03_transforme_img.jpg     "transformed image"
+[image8]: ./output_images/04_line_detection.jpg     "Line detection"
+[image9]: ./output_images/05_result.jpg             "Reesult"
+[video]: ./output_images/project_video_result.mp4   "Video"
 
 ## [Rubric](https://review.udacity.com/#!/rubrics/571/view) Points
 ###Here I will consider the rubric points individually and describe how I addressed each point in my implementation.  
@@ -34,7 +37,8 @@ The goals / steps of this project are the following:
 
 ####1. Provide a Writeup / README that includes all the rubric points and how you addressed each one.  You can submit your writeup as markdown or pdf.  [Here](https://github.com/udacity/CarND-Advanced-Lane-Lines/blob/master/writeup_template.md) is a template writeup for this project you can use as a guide and a starting point.  
 
-You're reading it!
+You're reading it! :-)
+
 ###Camera Calibration
 
 ####1. Briefly state how you computed the camera matrix and distortion coefficients. Provide an example of a distortion corrected calibration image.
@@ -45,17 +49,39 @@ I start by preparing "object points", which will be the (x, y, z) coordinates of
 
 I then used the output `objpoints` and `imgpoints` to compute the camera calibration and distortion coefficients using the `cv2.calibrateCamera()` function.  I applied this distortion correction to the test image using the `cv2.undistort()` function and obtained this result: 
 
-![alt text][image1]
+
+Corner detection:
+
+<img src="./output_images/01_corner_detection.jpg" align="middle" width=40% height=40%> 
+
+Distorted image:
+
+<img src="./output_images/02_distorted_image.jpg " align="middle" width=40% height=40%> 
+
+
+Undistorted image:
+
+<img src="./output_images/02_undistorted_image.jpg " align="middle" width=40% height=40%> 
+
 
 ###Pipeline (single images)
 
-####1. Provide an example of a distortion-corrected image.
-To demonstrate this step, I will describe how I apply the distortion correction to one of the test images like this one:
-![alt text][image2]
-####2. Describe how (and identify where in your code) you used color transforms, gradients or other methods to create a thresholded binary image.  Provide an example of a binary image result.
-I used a combination of color and gradient thresholds to generate a binary image (thresholding steps at lines # through # in `another_file.py`).  Here's an example of my output for this step.  (note: this is not actually from one of the test images)
+####1. Describe how (and identify where in your code) you used color transforms, gradients or other methods to create a thresholded binary image.  Provide an example of a binary image result.
+I used a combination of color and gradient thresholds to generate a binary image (thresholding steps at lines # through # in `another_file.py`).  Here's an example of my output for this step.  
 
-![alt text][image3]
+Original image after distortion correction:
+
+<img src="./output_images/03_original_img.jpg" align="middle" width=40% height=40%> 
+
+Color binary image after applying threshold:
+
+<img src="./output_images/04_color_binary.jpg" align="middle" width=40% height=40%> 
+
+Combined thresholded image:
+
+<img src="./output_images/04_thresholded_img.jpg" align="middle" width=40% height=40%> 
+
+
 
 ####3. Describe how (and identify where in your code) you performed a perspective transform and provide an example of a transformed image.
 
@@ -85,13 +111,16 @@ This resulted in the following source and destination points:
 
 I verified that my perspective transform was working as expected by drawing the `src` and `dst` points onto a test image and its warped counterpart to verify that the lines appear parallel in the warped image.
 
-![alt text][image4]
+
+Transformed image:
+
 
 ####4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
 
 Then I did some other stuff and fit my lane lines with a 2nd order polynomial kinda like this:
 
-![alt text][image5]
+<img src="./output_images/04_line_detection.jpg" align="middle" width=40% height=40%> 
+
 
 ####5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
 
@@ -101,7 +130,7 @@ I did this in lines # through # in my code in `my_other_file.py`
 
 I implemented this step in lines # through # in my code in `yet_another_file.py` in the function `map_lane()`.  Here is an example of my result on a test image:
 
-![alt text][image6]
+<img src="./output_images/05_result.jpg" align="middle" width=40% height=40%> 
 
 ---
 
@@ -109,7 +138,7 @@ I implemented this step in lines # through # in my code in `yet_another_file.py`
 
 ####1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (wobbly lines are ok but no catastrophic failures that would cause the car to drive off the road!).
 
-Here's a [link to my video result](./project_video.mp4)
+Here's a [link to my video result](./output_images/project_video_result.mp4)
 
 ---
 
